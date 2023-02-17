@@ -23,3 +23,10 @@ or
 1. npm install
 2. npm start
 ```
+
+##  📃Licença
+
+* Licensed for users and contributors under MIT license.
+
+---
+<p align="center">Developed with ❤️ by Luiz Mantuano</p>
