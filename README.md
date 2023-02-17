@@ -11,3 +11,15 @@
 * [React Native](https://reactnative.dev/)
 * [Typescript](https://www.typescriptlang.org/)
 * [Expo](https://docs.expo.io/)
+
+🎯 Install the dependencies and start the server
+
+```
+1. yarn install
+2. yarn start
+```
+or
+```
+1. npm install
+2. npm start
+```
