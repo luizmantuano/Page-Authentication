@@ -1,13 +1,10 @@
-import { View, Text, TextInput, Image, Animated } from 'react-native';
+import { View, Text } from 'react-native';
 import React from 'react';
 import { styles } from './styles';
 import * as Animatable from 'react-native-animatable';
 import Button from '../../../components/Button';
-import { useNavigation } from '@react-navigation/native';
 
-const Welcome = () => {
-  const navigation = useNavigation();
-
+const Welcome = ({ navigation }) => {
   return (
     <View style={styles.container}>
       <View style={styles.containerLogo}>
@@ -24,11 +21,8 @@ const Welcome = () => {
         <Text style={styles.txt}>Acesse sua conta</Text>
       </Animatable.View>
       <Animatable.View animation='fadeInUp' delay={600} style={styles.containerButton}>
-        <Button
-          label='Cadastre-se'
-          onPress={() => navigation.navigate('Register' as never)}
-        />
-        <Button label='Login' onPress={() => navigation.navigate('Login' as never)} />
+        <Button label='Cadastre-se' onPress={() => navigation.navigate('Register')} />
+        <Button label='Login' onPress={() => navigation.navigate('Login')} />
       </Animatable.View>
     </View>
   );

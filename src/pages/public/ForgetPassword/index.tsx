@@ -5,21 +5,59 @@ import {
   Keyboard,
   TouchableOpacity,
   KeyboardAvoidingView,
+  Alert,
+  AlertButton,
 } from 'react-native';
 import React, { useState } from 'react';
 import { styles } from './styles';
 import Forget from '../../../assets/Forget.svg';
 import CustomInput from '../../../components/CustomInput';
 import ButtonTwo from '../../../components/ButtonTwo';
-import { useNavigation } from '@react-navigation/native';
 import { Ionicons } from '@expo/vector-icons';
+import { getAuth, sendPasswordResetEmail } from 'firebase/auth';
 
-const ForgetPassword = () => {
+interface MyComponentProps {
+  navigation: any;
+}
+
+const ForgetPassword = ({ navigation }: MyComponentProps) => {
   const [email, setEmail] = useState('');
-  const navigation = useNavigation();
+
+  const auth = getAuth();
+
+  const buttons: AlertButton[] = [{ text: 'OK', onPress: () => navigation.goBack() }];
+
+  const recover = () => {
+    if (email !== '') {
+      sendPasswordResetEmail(auth, email)
+        .then((r) => {
+          console.log('E-mail de redefinição de senha enviado com sucesso!');
+          Alert.alert(
+            'E-mail de redefinição de senha enviado com sucesso!',
+            undefined,
+            buttons
+          );
+        })
+        .catch((e) => {
+          console.log('ForgetPassWord, recover: ' + e);
+          switch (e.code) {
+            case 'auth/user-not-found':
+              Alert.alert('Error', 'Usuário não cadastrado.');
+              break;
+            case 'auth/invalid-email':
+              Alert.alert('Error', 'Email inválido.');
+              break;
+            case 'auth/user-disabled':
+              Alert.alert('Error', 'Usuário desabilitado.');
+          }
+        });
+    } else {
+      Alert.alert('Por favor, Digite um email cadastrado.');
+    }
+  };
 
   return (
-    <KeyboardAvoidingView behavior='padding' enabled style={styles.container}>
+    <KeyboardAvoidingView behavior='padding' style={styles.container}>
       <TouchableOpacity style={styles.backIcon} onPress={() => navigation.goBack()}>
         <Ionicons name='arrow-back-circle-outline' color='white' size={25} />
       </TouchableOpacity>
@@ -37,7 +75,7 @@ const ForgetPassword = () => {
         keyboardType='address-email'
         onChangeText={(text) => setEmail(text)}
       />
-      <ButtonTwo label='Enviar' />
+      <ButtonTwo label='Enviar' onPress={recover} />
     </KeyboardAvoidingView>
   );
 };

@@ -10,17 +10,33 @@ import React, { useState } from 'react';
 import { styles } from '../Register/styles';
 import { Ionicons } from '@expo/vector-icons';
 import * as Animatable from 'react-native-animatable';
-import { useNavigation } from '@react-navigation/native';
 import ButtonTwo from '../../../components/ButtonTwo';
+import { getAuth, createUserWithEmailAndPassword } from 'firebase/auth';
+import { initializeApp } from '@firebase/app';
+import { firebaseConfig } from '../../../../firebase-config';
 
-const Register = () => {
+const Register = ({ navigation }) => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [isValid, setIsValid] = useState(false);
   const [hidepass, setHidepass] = useState(true);
   const [validadecpf, setValidadecpf] = useState('');
   const [passwordError, setPasswordError] = useState('');
-  const navigation = useNavigation();
+
+  const app = initializeApp(firebaseConfig);
+  const auth = getAuth(app);
+
+  const handleCreateAccount = () => {
+    createUserWithEmailAndPassword(auth, email, password)
+      .then((userCredential) => {
+        console.log('Conta Criada com Sucesso');
+        const user = userCredential.user;
+        console.log(user);
+      })
+      .catch((error) => {
+        console.log(error);
+      });
+  };
 
   const emailRegex = /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/;
 
@@ -68,9 +84,10 @@ const Register = () => {
       console.log('complete o cpf');
     }
     if (validateCPF(validadecpf) === true) {
-      navigation.navigate('Login' as never);
       setEmail('');
       setPassword('');
+      handleCreateAccount();
+      navigation.navigate('Login');
     }
   };
 

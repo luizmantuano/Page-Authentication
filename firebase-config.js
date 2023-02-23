@@ -5,11 +5,10 @@
 
 // Your web app's Firebase configuration
 export const firebaseConfig = {
-  apiKey: "AIzaSyASx_p0kZt8rgvlU8LvGCgGq2RlKzwsmGM",
-  authDomain: "page-authentication-8cc87.firebaseapp.com",
-  projectId: "page-authentication-8cc87",
-  storageBucket: "page-authentication-8cc87.appspot.com",
-  messagingSenderId: "459362983398",
-  appId: "1:459362983398:web:1bad0cd139b31b4891ca27"
+  apiKey: 'AIzaSyDbX3rXPdEk0ttkwbpTAznDnGq65u4nMw8',
+  authDomain: 'authentication-54b8c.firebaseapp.com',
+  projectId: 'authentication-54b8c',
+  storageBucket: 'authentication-54b8c.appspot.com',
+  messagingSenderId: '307125873984',
+  appId: '1:307125873984:web:97c453fec2c78935e11ea5',
 };
-
