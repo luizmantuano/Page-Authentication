@@ -1,7 +1,7 @@
 <h1 align="center">
     <a>Page Authentication</a>
 </h1>
-WWWW
+
 
 ![ReactNative](https://img.shields.io/badge/React_Native-20232A?style=for-the-badge&logo=react&logoColor=61DAFB)&nbsp;
 ![Typescript](https://img.shields.io/badge/TypeScript-007ACC?style=for-the-badge&logo=typescript&logoColor=white)&nbsp;
