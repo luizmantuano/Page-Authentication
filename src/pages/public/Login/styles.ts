@@ -89,5 +89,4 @@ export const styles = StyleSheet.create({
     left: 30,
     top: 35,
   },
-  
 });
