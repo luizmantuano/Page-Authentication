@@ -9,10 +9,10 @@ const CustomInput = ({ label, onChangeText, keyboardType, secureTextEntry = fals
     <TextInput
       style={[
         styles.input,
-        focused && {
-          borderColor: '#38A69D',
-          borderWidth: 1,
-        },
+        {
+          borderColor: focused ? '#38A69D' : '#99f6e4', // Cor da borda baseada no foco
+          borderWidth: focused ? 1.5 : 1
+        }
       ]}
       placeholder={label}
       onChangeText={onChangeText}
