@@ -18,10 +18,11 @@ import { firebaseConfig } from '../../../../firebase-config';
 const Register = ({ navigation }) => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
-  const [isValid, setIsValid] = useState(false);
+  const [isValid, setIsValid] = useState(true);
   const [hidepass, setHidepass] = useState(true);
   const [validadecpf, setValidadecpf] = useState('');
   const [passwordError, setPasswordError] = useState('');
+  const [showEmailError, setShowEmailError] = useState(false);
 
   const app = initializeApp(firebaseConfig);
   const auth = getAuth(app);
@@ -41,7 +42,9 @@ const Register = ({ navigation }) => {
   const emailRegex = /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/;
 
   const validateEmail = (email) => {
-    setIsValid(emailRegex.test(email));
+    const valid = emailRegex.test(email);
+    setIsValid(valid);
+    setShowEmailError(!valid);
   };
 
   const handlePasswordChange = (password) => {
@@ -76,6 +79,10 @@ const Register = ({ navigation }) => {
   }
 
   const validation = () => {
+    if (!isValid) {
+      setShowEmailError(true);
+      return;
+    }
     if (email === '' || password === '') {
       console.log('error !!');
       return;
@@ -103,7 +110,7 @@ const Register = ({ navigation }) => {
         <View style={styles.Line} />
       </Animatable.View>
       <Animatable.View animation='fadeInUpBig' delay={600}>
-        {!isValid && <Text style={styles.error}>Email inválido</Text>}
+        {showEmailError && <Text style={styles.error}>Email inválido</Text>}
         <TextInput
           style={styles.input}
           keyboardType='email-address'
