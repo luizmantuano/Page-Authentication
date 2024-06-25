@@ -49,12 +49,10 @@ export const styles = StyleSheet.create({
     color: colors.black,
     fontFamily: 'DMSans-Bold',
     textDecorationLine: 'underline',
-    top: 30,
     left: 20,
   },
   btnForget: {
     flexDirection: 'row-reverse',
-    top: 166,
     right: 10,
     position: 'absolute',
   },
@@ -89,4 +87,8 @@ export const styles = StyleSheet.create({
     left: 30,
     top: 35,
   },
+  saveCredentialsContainer:{
+    alignItems:'center',
+    marginLeft:20
+  }
 });

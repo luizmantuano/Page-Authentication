@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { TextInput } from 'react-native';
 import { styles } from '../pages/public/Login/styles';
 
-const CustomInput = ({ label, onChangeText, keyboardType, secureTextEntry = false }) => {
+const CustomInput = ({ label, onChangeText, keyboardType, secureTextEntry = false, ...rest }) => {
   const [focused, setFocused] = useState(false);
 
   return (
@@ -21,6 +21,7 @@ const CustomInput = ({ label, onChangeText, keyboardType, secureTextEntry = fals
       placeholderTextColor='#2C2948'
       onFocus={() => setFocused(true)}
       onBlur={() => setFocused(false)}
+      {...rest}
     />
   );
 };

@@ -15,6 +15,7 @@ import CustomInput from '../../../components/CustomInput';
 import ButtonTwo from '../../../components/ButtonTwo';
 import { Ionicons } from '@expo/vector-icons';
 import { getAuth, sendPasswordResetEmail } from 'firebase/auth';
+import Toast from 'react-native-toast-message';
 
 interface MyComponentProps {
   navigation: any;
@@ -26,6 +27,21 @@ const ForgetPassword = ({ navigation }: MyComponentProps) => {
   const auth = getAuth();
 
   const buttons: AlertButton[] = [{ text: 'OK', onPress: () => navigation.goBack() }];
+
+  const forgetErrorMessages = {
+    'auth/user-not-found': 'Usuário não cadastrado',
+    'auth/invalid-email': 'Credenciais inválidas',
+    'auth/user-disabled': 'Usuário desabilitado',
+    default: 'Erro desconhecido',
+  };
+
+  const showToast = (type, message) => {
+    Toast.show({
+      type: 'error',
+      text1: 'Error',
+      text2: message + ' ❌',
+    });
+  };
 
   const recover = () => {
     if (email !== '') {
@@ -40,19 +56,15 @@ const ForgetPassword = ({ navigation }: MyComponentProps) => {
         })
         .catch((e) => {
           console.log('ForgetPassWord, recover: ' + e);
-          switch (e.code) {
-            case 'auth/user-not-found':
-              Alert.alert('Error', 'Usuário não cadastrado.');
-              break;
-            case 'auth/invalid-email':
-              Alert.alert('Error', 'Email inválido.');
-              break;
-            case 'auth/user-disabled':
-              Alert.alert('Error', 'Usuário desabilitado.');
-          }
+          const forgetErrorMessage = forgetErrorMessages[e.code] || forgetErrorMessages.default;
+        showToast('error', forgetErrorMessage);
         });
     } else {
-      Alert.alert('Por favor, Digite um email cadastrado.');
+      Toast.show({
+        type: 'error',
+        text1: 'Error',
+        text2:'Por favor, Digite um email cadastrado.',
+      });
     }
   };
 

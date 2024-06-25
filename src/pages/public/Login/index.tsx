@@ -1,48 +1,99 @@
-import { View, Text, TouchableOpacity, Pressable, Keyboard, Alert } from 'react-native';
-import React, { useState } from 'react';
-import { styles } from '../Login/styles';
+import React, { useEffect, useState } from 'react';
+import { View, Text, TouchableOpacity, Pressable, Keyboard, Switch } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import CustomInput from '../../../components/CustomInput';
 import ButtonTwo from '../../../components/ButtonTwo';
-import { getAuth, signInWithEmailAndPassword } from 'firebase/auth';
-import { initializeApp } from '@firebase/app';
-import { firebaseConfig } from '../../../../firebase-config';
+import { signInWithEmailAndPassword } from 'firebase/auth';
+import { auth } from "../../../../firebase-config";
+import AsyncStorage from "@react-native-async-storage/async-storage";
+import Toast from 'react-native-toast-message';
+import useAuthStore from '../../../store/useAuthStore';
+import { styles } from './styles';
 
 const Login = ({ navigation }) => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [hidepass, setHidepass] = useState(true);
+  const [saveCredentials, setSaveCredentials] = useState(false);
+  const [buttonDisabled, setButtonDisabled] = useState(true); // Estado para controlar o botão de entrar
 
-  const app = initializeApp(firebaseConfig);
-  const auth = getAuth(app);
+  const { setLogged } = useAuthStore();
 
-  const handleSignIn = () => {
-    if (email !== '' || password !== '') {
-      signInWithEmailAndPassword(auth, email, password)
-        .then((userCredential) => {
-          console.log('Sucesso');
-          const user = userCredential.user;
-          console.log(user);
-          navigation.navigate('Home');
-        })
-        .catch((e) => {
-          console.log(e);
-          switch (e.code) {
-            case 'auth/user-not-found':
-              Alert.alert('Error', 'Usuário não cadastrado.');
-              break;
-            case 'auth/invalid-email':
-              Alert.alert('Error', 'Email inválido.');
-              break;
-            case 'auth/wrong-password':
-              Alert.alert('Error', 'Senha inválida.');
-              break;
-            case 'auth/user-disabled':
-              Alert.alert('Error', 'Usuário desabilitado.');
-          }
-        });
+  // Função para salvar credenciais
+  const saveCredentialsAsync = async () => {
+    try {
+      await AsyncStorage.setItem(
+        "savedCredentials",
+        JSON.stringify({ email, password }),
+      );
+      console.log("Credenciais salvas localmente");
+    } catch (error) {
+      console.error("Erro ao salvar credenciais:", error);
     }
   };
+
+  // Função para recuperar credenciais
+  const getSavedCredentialsAsync = async () => {
+    try {
+      const savedCredentials = await AsyncStorage.getItem("savedCredentials");
+      if (savedCredentials !== null) {
+        const { email: savedEmail, password: savedPassword } =
+          JSON.parse(savedCredentials);
+        setEmail(savedEmail);
+        setPassword(savedPassword);
+      }
+    } catch (error) {
+      console.error("Erro ao recuperar credenciais:", error);
+    }
+  };
+
+  useEffect(() => {
+    getSavedCredentialsAsync();
+  }, []);
+
+  const errorMessages = {
+    'auth/user-not-found': 'Usuário não cadastrado',
+    'auth/invalid-email': 'Credenciais inválidas',
+    'auth/wrong-password': 'Credenciais inválidas',
+    'auth/user-disabled': 'Usuário desabilitado',
+    default: 'Erro desconhecido',
+  };
+
+  const showToast = (type, message) => {
+    Toast.show({
+      type: 'error',
+      text1: 'Error',
+      text2: message + ' ❌',
+    });
+  };
+
+  const handleSignIn = () => {
+    signInWithEmailAndPassword(auth, email, password)
+      .then((userCredential) => {
+        console.log('Sucesso');
+        const user = userCredential.user;
+        console.log(user);
+        setLogged(true);
+
+        if (saveCredentials) {
+          saveCredentialsAsync();
+        }
+      })
+      .catch((e) => {
+        console.log(e);
+        const errorMessage = errorMessages[e.code] || errorMessages.default;
+        showToast('error', errorMessage);
+      });
+  };
+
+  // Atualiza o estado do botão conforme os campos de email e senha
+  useEffect(() => {
+    if (email !== '' && password !== '') {
+      setButtonDisabled(false);
+    } else {
+      setButtonDisabled(true);
+    }
+  }, [email, password]);
 
   return (
     <Pressable onPress={Keyboard.dismiss} style={styles.container}>
@@ -56,15 +107,18 @@ const Login = ({ navigation }) => {
 
       <View style={styles.AreaInput}>
         <CustomInput
-          keyboardType='address-email'
+          keyboardType='email-address'
           label='E-mail'
           onChangeText={(text) => setEmail(text)}
+          value={email}
         />
+
         <CustomInput
-          keyboardType='numeric'
+          keyboardType='default'
           label='Senha'
           onChangeText={(text) => setPassword(text)}
           secureTextEntry={hidepass}
+          value={password}
         />
 
         <TouchableOpacity
@@ -72,24 +126,32 @@ const Login = ({ navigation }) => {
           onPress={() => setHidepass(!hidepass)}
         >
           {hidepass ? (
-            <Ionicons name='eye' color='black' size={22} />
-          ) : (
             <Ionicons name='eye-off' color='black' size={22} />
+          ) : (
+            <Ionicons name='eye' color='black' size={22} />
           )}
         </TouchableOpacity>
-
-        <TouchableOpacity
-          style={styles.btnForget}
-          onPress={() => navigation.navigate('ForgetPassword')}
-        >
-          <Text style={styles.Forget}>Esqueci minha senha</Text>
-        </TouchableOpacity>
+        <View style={{ flexDirection: 'row', justifyContent: 'space-between', width: '100%', alignItems: 'center' }}>
+          <TouchableOpacity
+            style={styles.btnForget}
+            onPress={() => navigation.navigate('ForgetPassword')}
+          >
+            <Text style={styles.Forget}>Esqueci minha senha</Text>
+          </TouchableOpacity>
+          {/* Checkbox para salvar credenciais */}
+          <View style={styles.saveCredentialsContainer}>
+            <Text style={{ color: "#000000", fontSize: 10 }}>
+              Salvar credenciais
+            </Text>
+            <Switch
+              value={saveCredentials}
+              onValueChange={(value) => setSaveCredentials(value)}
+              style={{ height: 30 }}
+            />
+          </View>
+        </View>
       </View>
-      {email === '' || password === '' ? (
-        <ButtonTwo label='Entrar' disabled={true} onPress={() => alert('')} />
-      ) : (
-        <ButtonTwo label='Entrar' onPress={handleSignIn} />
-      )}
+      <ButtonTwo label='Entrar' disabled={buttonDisabled} onPress={handleSignIn} />
 
       <Text style={styles.title}>Ainda não tem conta</Text>
       <TouchableOpacity

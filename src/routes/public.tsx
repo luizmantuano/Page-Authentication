@@ -5,7 +5,7 @@ import Welcome from '../pages/public/welcome';
 import Login from '../pages/public/Login';
 import Register from '../pages/public/Register';
 import ForgetPassword from '../pages/public/ForgetPassword';
-import Home from '../pages/public/Home';
+
 
 const Stack = createNativeStackNavigator();
 
@@ -24,7 +24,6 @@ const PublicStack = () => {
         component={ForgetPassword}
         options={{ headerShown: false }}
       />
-      <Stack.Screen name='Home' component={Home} options={{ headerShown: false }} />
     </Stack.Navigator>
   );
 };
