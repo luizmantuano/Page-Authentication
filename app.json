@@ -24,14 +24,21 @@
       "adaptiveIcon": {
         "foregroundImage": "./assets/adaptive-icon.png",
         "backgroundColor": "#FFFFFF"
-      }
+      },
+      "package": "com.anonymous.PageAuthentication"
     },
     "web": {
       "favicon": "./assets/favicon.png"
     },
-    "packagerOpts":{
-      "config":"metro.config.js",
-      "sourceExts":["js","jsx","ts","tsx","svg"]
+    "packagerOpts": {
+      "config": "metro.config.js",
+      "sourceExts": [
+        "js",
+        "jsx",
+        "ts",
+        "tsx",
+        "svg"
+      ]
     }
   }
 }
