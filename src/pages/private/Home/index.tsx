@@ -5,7 +5,7 @@ import { styles } from './styles';
 const Home = () => {
   return (
     <SafeAreaView style={styles.container}>
-      <Text>index</Text>
+      <Text>Home</Text>
     </SafeAreaView>
   );
 };

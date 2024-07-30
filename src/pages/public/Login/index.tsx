@@ -10,6 +10,8 @@ import Toast from 'react-native-toast-message';
 import useAuthStore from '../../../store/useAuthStore';
 import { styles } from './styles';
 
+import { Checkbox } from "react-native-paper";
+
 const Login = ({ navigation }) => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
@@ -32,8 +34,22 @@ const Login = ({ navigation }) => {
     }
   };
 
-  // Função para recuperar credenciais
-  const getSavedCredentialsAsync = async () => {
+  // Função para remover credenciais
+  const removeCredentialsAsync = async () => {
+    try {
+      const savedCredentials = await AsyncStorage.getItem("savedCredentials");
+      if (savedCredentials !== null) {
+        await AsyncStorage.removeItem("savedCredentials");
+        console.log("Credenciais removidas localmente");
+        setSaveCredentials(false); // Desmarca o checkbox ao remover as credenciais
+      }
+    } catch (error) {
+      console.error("Erro ao remover credenciais:", error);
+    }
+  };
+
+   // Função para recuperar credenciais
+   const getSavedCredentialsAsync = async () => {
     try {
       const savedCredentials = await AsyncStorage.getItem("savedCredentials");
       if (savedCredentials !== null) {
@@ -41,6 +57,9 @@ const Login = ({ navigation }) => {
           JSON.parse(savedCredentials);
         setEmail(savedEmail);
         setPassword(savedPassword);
+        setSaveCredentials(true); // Marca o checkbox se houver credenciais salvas
+      } else {
+        setSaveCredentials(false); // Garante que o checkbox esteja desmarcado se não houver credenciais
       }
     } catch (error) {
       console.error("Erro ao recuperar credenciais:", error);
@@ -64,25 +83,34 @@ const Login = ({ navigation }) => {
       type: 'error',
       text1: 'Error',
       text2: message + ' ❌',
+      text1Style:{fontSize:16},
+      text2Style:{fontSize:13}
     });
   };
 
+  // Função para lidar com o login
   const handleSignIn = () => {
+    if (password === "") {
+      showToast("error", "Por favor, preencha a senha.");
+      return; // Retorna sem fazer login se a senha estiver vazia
+    }
     signInWithEmailAndPassword(auth, email, password)
       .then((userCredential) => {
-        console.log('Sucesso');
+        console.log("Sucesso");
         const user = userCredential.user;
         console.log(user);
         setLogged(true);
 
         if (saveCredentials) {
           saveCredentialsAsync();
+        } else {
+          removeCredentialsAsync(); // Remove apenas se houver credenciais salvas
         }
       })
       .catch((e) => {
         console.log(e);
         const errorMessage = errorMessages[e.code] || errorMessages.default;
-        showToast('error', errorMessage);
+        showToast("error", errorMessage);
       });
   };
 
@@ -119,6 +147,7 @@ const Login = ({ navigation }) => {
           onChangeText={(text) => setPassword(text)}
           secureTextEntry={hidepass}
           value={password}
+          onSubmitEditing={handleSignIn}
         />
 
         <TouchableOpacity
@@ -140,15 +169,13 @@ const Login = ({ navigation }) => {
           </TouchableOpacity>
           {/* Checkbox para salvar credenciais */}
           <View style={styles.saveCredentialsContainer}>
-            <Text style={{ color: "#000000", fontSize: 10 }}>
-              Salvar credenciais
-            </Text>
-            <Switch
-              value={saveCredentials}
-              onValueChange={(value) => setSaveCredentials(value)}
-              style={{ height: 30 }}
-            />
-          </View>
+          <Checkbox
+            status={saveCredentials ? "checked" : "unchecked"}
+            onPress={() => setSaveCredentials(!saveCredentials)}
+            color="#38A69D"
+          />
+          <Text style={{ color: "#000000", fontSize: 12 }}>Lembrar-me</Text>
+        </View>
         </View>
       </View>
       <ButtonTwo label='Entrar' disabled={buttonDisabled} onPress={handleSignIn} />

@@ -89,6 +89,7 @@ export const styles = StyleSheet.create({
   },
   saveCredentialsContainer:{
     alignItems:'center',
-    marginLeft:20
+    marginLeft:20,
+    flexDirection:'row'
   }
 });
