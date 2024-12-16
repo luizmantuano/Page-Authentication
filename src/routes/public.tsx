@@ -5,22 +5,23 @@ import Welcome from '../pages/public/welcome';
 import Login from '../pages/public/Login';
 import Register from '../pages/public/Register';
 import ForgetPassword from '../pages/public/ForgetPassword';
+import {PublicStackParamList, Screens } from './types';
 
 
-const Stack = createNativeStackNavigator();
+const Stack = createNativeStackNavigator<PublicStackParamList>();
 
 const PublicStack = () => {
   return (
-    <Stack.Navigator initialRouteName='Welcome'>
-      <Stack.Screen name='Welcome' component={Welcome} options={{ headerShown: false }} />
-      <Stack.Screen name='Login' component={Login} options={{ headerShown: false }} />
+    <Stack.Navigator initialRouteName={Screens.Welcome}>
+      <Stack.Screen name={Screens.Welcome} component={Welcome} options={{ headerShown: false }} />
+      <Stack.Screen name={Screens.Login} component={Login} options={{ headerShown: false }} />
       <Stack.Screen
-        name='Register'
+        name={Screens.Register}
         component={Register}
         options={{ headerShown: false }}
       />
       <Stack.Screen
-        name='ForgetPassword'
+        name={Screens.ForgetPassword}
         component={ForgetPassword}
         options={{ headerShown: false }}
       />
