@@ -11,6 +11,7 @@ import useAuthStore from '../../../store/useAuthStore';
 import { styles } from './styles';
 
 import { Checkbox } from "react-native-paper";
+import { Screens } from '../../../routes/types';
 
 const Login = ({ navigation }) => {
   const [email, setEmail] = useState('');
@@ -163,7 +164,7 @@ const Login = ({ navigation }) => {
         <View style={{ flexDirection: 'row', justifyContent: 'space-between', width: '100%', alignItems: 'center' }}>
           <TouchableOpacity
             style={styles.btnForget}
-            onPress={() => navigation.navigate('ForgetPassword')}
+            onPress={() => navigation.navigate(Screens.ForgetPassword)}
           >
             <Text style={styles.Forget}>Esqueci minha senha</Text>
           </TouchableOpacity>
@@ -183,7 +184,7 @@ const Login = ({ navigation }) => {
       <Text style={styles.title}>Ainda não tem conta</Text>
       <TouchableOpacity
         style={styles.AreaTextRegister}
-        onPress={() => navigation.navigate('Register')}
+        onPress={() => navigation.navigate(Screens.Register)}
       >
         <Text style={styles.textRegister}>Cadastre-se</Text>
       </TouchableOpacity>
