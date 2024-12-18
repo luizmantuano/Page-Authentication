@@ -15,6 +15,7 @@ import { getAuth, createUserWithEmailAndPassword } from 'firebase/auth';
 import { initializeApp } from '@firebase/app';
 import { firebaseConfig } from '../../../../firebase-config';
 import Toast from 'react-native-toast-message';
+import { Screens } from '../../../routes/types';
 
 const Register = ({ navigation }) => {
   const [email, setEmail] = useState('');
@@ -103,7 +104,7 @@ const Register = ({ navigation }) => {
       setEmail('');
       setPassword('');
       handleCreateAccount();
-      navigation.navigate('Login');
+      navigation.navigate(Screens.Login);
     }
   };
 
