@@ -3,6 +3,7 @@ import React from 'react';
 import { styles } from './styles';
 import * as Animatable from 'react-native-animatable';
 import Button from '../../../components/Button';
+import { Screens } from '../../../routes/types';
 
 const Welcome = ({ navigation }) => {
   return (
@@ -21,8 +22,8 @@ const Welcome = ({ navigation }) => {
         <Text style={styles.txt}>Acesse sua conta</Text>
       </Animatable.View>
       <Animatable.View animation='fadeInUp' delay={600} style={styles.containerButton}>
-        <Button label='Cadastre-se' onPress={() => navigation.navigate('Register')} />
-        <Button label='Login' onPress={() => navigation.navigate('Login')} />
+        <Button label='Cadastre-se' onPress={() => navigation.navigate(Screens.Register)} />
+        <Button label='Login' onPress={() => navigation.navigate(Screens.Login)} />
       </Animatable.View>
     </View>
   );
