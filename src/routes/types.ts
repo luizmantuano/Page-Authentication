@@ -5,6 +5,9 @@ export enum Screens {
     Register = 'Register',
     ForgetPassword = 'ForgetPassword',
     Onboarding = 'Onboarding',
+    Search = 'Search',
+    Favorites = 'Favorites',
+    Profile = 'Profile',
 }
 
 
@@ -18,4 +21,11 @@ export type PublicStackParamList = {
 
 export type PrivateStackParamList = {
     [Screens.Home]: undefined;
+}
+
+export type TabParamList = {
+    [Screens.Home]: undefined;
+    [Screens.Search]: undefined;
+    [Screens.Favorites]: undefined;
+    [Screens.Profile]: undefined;
 }
