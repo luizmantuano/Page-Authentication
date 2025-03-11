@@ -7,87 +7,99 @@ import {
   KeyboardAvoidingView,
   Alert,
   AlertButton,
-} from 'react-native';
-import React, { useState } from 'react';
-import { styles } from './styles';
-import Forget from '../../../assets/Forget.svg';
-import CustomInput from '../../../components/CustomInput';
-import ButtonTwo from '../../../components/ButtonTwo';
-import { Ionicons } from '@expo/vector-icons';
-import { getAuth, sendPasswordResetEmail } from 'firebase/auth';
-import Toast from 'react-native-toast-message';
+} from "react-native";
+import React, { useState } from "react";
+import { styles } from "./styles";
+import Forget from "../../../assets/Forget.svg";
+import CustomInput from "../../../components/CustomInput";
+import ButtonTwo from "../../../components/ButtonTwo";
+import { Ionicons } from "@expo/vector-icons";
+import { getAuth, sendPasswordResetEmail } from "firebase/auth";
+import Toast from "react-native-toast-message";
+import { colors } from "../../../styles/colors";
 
 interface MyComponentProps {
   navigation: any;
 }
 
 const ForgetPassword = ({ navigation }: MyComponentProps) => {
-  const [email, setEmail] = useState('');
+  const [email, setEmail] = useState("");
 
   const auth = getAuth();
 
-  const buttons: AlertButton[] = [{ text: 'OK', onPress: () => navigation.goBack() }];
+  const buttons: AlertButton[] = [
+    { text: "OK", onPress: () => navigation.goBack() },
+  ];
 
   const forgetErrorMessages = {
-    'auth/user-not-found': 'Usuário não cadastrado',
-    'auth/invalid-email': 'Credenciais inválidas',
-    'auth/user-disabled': 'Usuário desabilitado',
-    default: 'Erro desconhecido',
+    "auth/user-not-found": "Usuário não cadastrado",
+    "auth/invalid-email": "Credenciais inválidas",
+    "auth/user-disabled": "Usuário desabilitado",
+    default: "Erro desconhecido",
   };
 
   const showToast = (type, message) => {
     Toast.show({
-      type: 'error',
-      text1: 'Error',
-      text2: message + ' ❌',
+      type: "error",
+      text1: "Error",
+      text2: message + " ❌",
     });
   };
 
   const recover = () => {
-    if (email !== '') {
+    if (email !== "") {
       sendPasswordResetEmail(auth, email)
         .then((r) => {
-          console.log('E-mail de redefinição de senha enviado com sucesso!');
+          console.log("E-mail de redefinição de senha enviado com sucesso!");
           Alert.alert(
-            'E-mail de redefinição de senha enviado com sucesso!',
+            "E-mail de redefinição de senha enviado com sucesso!",
             undefined,
             buttons
           );
         })
         .catch((e) => {
-          console.log('ForgetPassWord, recover: ' + e);
-          const forgetErrorMessage = forgetErrorMessages[e.code] || forgetErrorMessages.default;
-        showToast('error', forgetErrorMessage);
+          console.log("ForgetPassWord, recover: " + e);
+          const forgetErrorMessage =
+            forgetErrorMessages[e.code] || forgetErrorMessages.default;
+          showToast("error", forgetErrorMessage);
         });
     } else {
       Toast.show({
-        type: 'error',
-        text1: 'Error',
-        text2:'Por favor, Digite um email cadastrado.',
+        type: "error",
+        text1: "Error",
+        text2: "Por favor, Digite um email cadastrado.",
       });
     }
   };
 
   return (
-    <KeyboardAvoidingView behavior='padding' style={styles.container}>
-      <TouchableOpacity style={styles.backIcon} onPress={() => navigation.goBack()}>
-        <Ionicons name='arrow-back-circle-outline' color='white' size={25} />
+    <KeyboardAvoidingView behavior="padding" style={styles.container}>
+      <TouchableOpacity
+        style={styles.backIcon}
+        onPress={() => navigation.goBack()}
+      >
+        <Ionicons
+          name="arrow-back-circle-outline"
+          color={colors.primary500}
+          size={25}
+        />
       </TouchableOpacity>
       <View>
-        <Text style={styles.Title}>Esqueceu sua senha ?</Text>
+        <Text style={styles.title}>Esqueceu sua senha ?</Text>
         <Text style={styles.Txt}>
-          Não se preocupe! acontece. Insira {'\n'}o endereço associado á sua conta
+          Não se preocupe! acontece. Insira {"\n"}o endereço associado á sua
+          conta
         </Text>
       </View>
       <Pressable onPress={Keyboard.dismiss} style={styles.ImgForget}>
         <Forget />
       </Pressable>
       <CustomInput
-        label='Insira seu Email'
-        keyboardType='address-email'
+        label="Insira seu Email"
+        keyboardType="default"
         onChangeText={(text) => setEmail(text)}
       />
-      <ButtonTwo label='Enviar' onPress={recover} />
+      <ButtonTwo label="Enviar" onPress={recover} />
     </KeyboardAvoidingView>
   );
 };
