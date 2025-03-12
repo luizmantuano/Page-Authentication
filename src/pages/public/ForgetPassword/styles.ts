@@ -5,9 +5,9 @@ export const styles = StyleSheet.create({
     flex: 1,
     alignItems: 'center',
     justifyContent: 'center',
-    backgroundColor: '#38A69D',
+    backgroundColor: '#1C1C1E',
   },
-  Title: {
+  title: {
     color: '#FFFFFF',
     fontFamily: 'DMSans-Bold',
     fontSize: 25,
